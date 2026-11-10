@@ -30,12 +30,17 @@ The commands below are for Windows PowerShell (including Laragon). Run them from
 ```powershell
 git clone https://github.com/fmtawhid/CSN-Task-small-ecommerce.git
 cd CSN-Task-small-ecommerce
+composer install
 npm ci
 ```
 
-The repository includes `vendor` and `.env`, so `composer install` and copying `.env.example` are not needed for the initial setup. If you already have the project, open PowerShell in its root folder and continue below.
+Create your local environment file from the example:
 
-In `.env`, set `APP_URL` to `http://csn-task-small-ecommerce.test` when using Laragon's virtual host, and update the `DB_*` values if your MySQL credentials differ from the configured defaults. Generate an application key only if `APP_KEY` is empty:
+```powershell
+Copy-Item .env.example .env
+```
+
+In `.env`, set `APP_URL` to `http://csn-task-small-ecommerce.test` when using Laragon's virtual host, and update the `DB_*` values if your MySQL credentials differ from the defaults. Then generate the application key:
 
 ```powershell
 php artisan key:generate
@@ -105,6 +110,6 @@ php artisan test
 npm run build
 ```
 
-## Repository configuration
+## Generated and local files
 
-This assessment repository currently includes `.env` and `vendor`. Make sure `.env` contains no real or reused secrets before publishing or deploying; use private environment configuration for production. Uploaded files, local SQLite databases, and `node_modules` should remain local.
+`.env` contains machine-specific configuration and must not be committed; `.env.example` is the safe template. Composer creates `vendor` with `composer install`, and Vite creates `public/build` with `npm run build`. These generated files, uploaded files, local SQLite databases, and `node_modules` should remain local and are excluded from Git.
