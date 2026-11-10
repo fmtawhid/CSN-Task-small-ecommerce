@@ -1,3 +1,6 @@
+```
+```
+
 # Marketplace - Multi-vendor E-commerce
 
 Laravel 12, Inertia.js 2, React, TypeScript, and Tailwind CSS application for managing shops and a shared product catalog.
@@ -23,18 +26,28 @@ This project uses MySQL for local development. The test suite uses an isolated i
 
 ## Fresh setup (MySQL)
 
-The commands below are for Windows PowerShell (including Laragon). Run them from the repository root. This assumes Laragon MySQL is running and the project's `.env` already points to the `small_ecommerce` database; no database creation or `.env` setup steps are included.
+The commands below are for Windows PowerShell (including Laragon). Run them from the repository root. Start Laragon's MySQL service and create a MySQL database named `small_ecommerce` before migrating.
 
 ### 1. Get the code and install dependencies
 
 ```powershell
-git clone https://github.com/fmtawhid/CSN-Task-small-ecommerce-.git
-cd CSN-Task-small-ecommerce-
+git clone https://github.com/fmtawhid/CSN-Task-small-ecommerce.git
+cd CSN-Task-small-ecommerce
 composer install
 npm ci
 ```
 
-If you already have the project, open PowerShell in its root folder and continue below.
+If you already have the project, open PowerShell in its root folder and continue below. For a fresh clone, create and configure the local environment:
+
+```powershell
+Copy-Item .env.example .env
+```
+
+Set `APP_URL` to `http://csn-task-small-ecommerce.test` when using Laragon's virtual host, and update the `DB_*` values in `.env` if your MySQL credentials differ from the defaults. Then generate the application key:
+
+```powershell
+php artisan key:generate
+```
 
 ### 2. Run migrations and seeders
 
@@ -57,20 +70,15 @@ If you want to check migration status before or after migrating:
 php artisan migrate:status
 ```
 
-### 3. Build assets and start the application
+### 3. Start the application
 
-For a production asset build:
-
-```powershell
-npm run build
-npm run dev
-```
-
-Open [projectname.test](projectname.test). For local development with the server, queue worker, and Vite dev server running together, use:
+Start the Laravel server, queue worker, and Vite development server together:
 
 ```powershell
 composer run dev
 ```
+
+With Laragon's virtual host enabled, open [http://csn-task-small-ecommerce.test](http://csn-task-small-ecommerce.test). Otherwise, the Laravel development server is available at [http://127.0.0.1:8000](http://127.0.0.1:8000). To build production assets instead, run `npm run build`.
 
 Sign in at `/login`; the admin dashboard is `/admin/dashboard`. Create shops at `/admin/shops` by entering the owner's name, email, and password; the owner account is created together with the shop. Use `/admin/owners` to manage existing owners.
 
@@ -78,10 +86,10 @@ Sign in at `/login`; the admin dashboard is `/admin/dashboard`. Create shops at 
 
 The `MarketplaceDemoSeeder` creates the following accounts. Use these credentials for local testing only; never use them in production.
 
-| Role | Email | Password |
-| --- | --- | --- |
-| Admin | `demo-admin@example.test` | `AdminDemo123!` |
-| User | `demo-user@example.test` | `UserDemo123!` |
+| Role                    | Email                         | Password          |
+| ----------------------- | ----------------------------- | ----------------- |
+| Admin                   | `demo-admin@example.test`   | `AdminDemo123!` |
+| User                    | `demo-user@example.test`    | `UserDemo123!`  |
 | Shop owner (first shop) | `demo-owner-1@example.test` | `OwnerDemo123!` |
 
 The other four shop owners use `demo-owner-2@example.test` through `demo-owner-5@example.test` with the same owner password. When creating a shop in the admin panel, enter the owner's name, email, and password in the shop form; the owner account and shop are created together.
@@ -94,18 +102,15 @@ The other four shop owners use `demo-owner-2@example.test` through `demo-owner-5
 | `/products`        | Searchable catalog of products listed by active shops |
 | `/stores`          | Searchable directory of active shops                  |
 | `/shop/{slug}`     | Shop storefront                                       |
-| `/login`           | Admin, user, and shop-owner sign in                    |
+| `/login`           | Admin, user, and shop-owner sign in                   |
 | `/admin/dashboard` | Admin dashboard                                       |
 | `/owner/dashboard` | Shop-owner dashboard                                  |
 
 ## Tests and checks
 
- separate from the MySQL database used by the application. Enable `` only if you want to run the test suite:
-
 ```powershell
-
+php artisan test
 npm run build
-
 ```
 
 ## Repository safety

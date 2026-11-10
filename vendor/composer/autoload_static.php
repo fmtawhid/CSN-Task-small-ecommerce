@@ -212,8 +212,8 @@ class ComposerStaticInit8560aeaaec172791428c9ef91c9bb34d
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Whoops\\' => 
         array (
@@ -377,8 +377,8 @@ class ComposerStaticInit8560aeaaec172791428c9ef91c9bb34d
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -450,8 +450,8 @@ class ComposerStaticInit8560aeaaec172791428c9ef91c9bb34d
         ),
         'League\\Uri\\' => 
         array (
-            0 => __DIR__ . '/..' . '/league/uri-interfaces',
-            1 => __DIR__ . '/..' . '/league/uri',
+            0 => __DIR__ . '/..' . '/league/uri',
+            1 => __DIR__ . '/..' . '/league/uri-interfaces',
         ),
         'League\\MimeTypeDetection\\' => 
         array (
@@ -605,8 +605,14 @@ class ComposerStaticInit8560aeaaec172791428c9ef91c9bb34d
     );
 
     public static $classMap = array (
+        'App\\Http\\Controllers\\Admin\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/DashboardController.php',
+        'App\\Http\\Controllers\\Admin\\HomepageContentController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/HomepageContentController.php',
+        'App\\Http\\Controllers\\Admin\\ListingController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ListingController.php',
         'App\\Http\\Controllers\\Admin\\PermissionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/PermissionController.php',
+        'App\\Http\\Controllers\\Admin\\ProductController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ProductController.php',
         'App\\Http\\Controllers\\Admin\\RoleController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/RoleController.php',
+        'App\\Http\\Controllers\\Admin\\ShopController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ShopController.php',
+        'App\\Http\\Controllers\\Admin\\ShopOwnerController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/ShopOwnerController.php',
         'App\\Http\\Controllers\\Admin\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/UserController.php',
         'App\\Http\\Controllers\\Auth\\AuthenticatedSessionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AuthenticatedSessionController.php',
         'App\\Http\\Controllers\\Auth\\ConfirmablePasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmablePasswordController.php',
@@ -616,15 +622,48 @@ class ComposerStaticInit8560aeaaec172791428c9ef91c9bb34d
         'App\\Http\\Controllers\\Auth\\PasswordResetLinkController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/PasswordResetLinkController.php',
         'App\\Http\\Controllers\\Auth\\RegisteredUserController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/RegisteredUserController.php',
         'App\\Http\\Controllers\\Auth\\VerifyEmailController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/VerifyEmailController.php',
+        'App\\Http\\Controllers\\ContactController' => __DIR__ . '/../..' . '/app/Http/Controllers/ContactController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
+        'App\\Http\\Controllers\\EmailController' => __DIR__ . '/../..' . '/app/Http/Controllers/EmailController.php',
+        'App\\Http\\Controllers\\Owner\\CatalogController' => __DIR__ . '/../..' . '/app/Http/Controllers/Owner/CatalogController.php',
+        'App\\Http\\Controllers\\Owner\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/Owner/DashboardController.php',
+        'App\\Http\\Controllers\\Owner\\ListingController' => __DIR__ . '/../..' . '/app/Http/Controllers/Owner/ListingController.php',
+        'App\\Http\\Controllers\\Owner\\OrderController' => __DIR__ . '/../..' . '/app/Http/Controllers/Owner/OrderController.php',
         'App\\Http\\Controllers\\Settings\\PasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Settings/PasswordController.php',
         'App\\Http\\Controllers\\Settings\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/Settings/ProfileController.php',
+        'App\\Http\\Controllers\\Storefront\\CatalogController' => __DIR__ . '/../..' . '/app/Http/Controllers/Storefront/CatalogController.php',
+        'App\\Http\\Controllers\\Storefront\\CheckoutController' => __DIR__ . '/../..' . '/app/Http/Controllers/Storefront/CheckoutController.php',
+        'App\\Http\\Controllers\\Storefront\\ShopController' => __DIR__ . '/../..' . '/app/Http/Controllers/Storefront/ShopController.php',
+        'App\\Http\\Middleware\\EnsureUserRole' => __DIR__ . '/../..' . '/app/Http/Middleware/EnsureUserRole.php',
         'App\\Http\\Middleware\\HandleAppearance' => __DIR__ . '/../..' . '/app/Http/Middleware/HandleAppearance.php',
         'App\\Http\\Middleware\\HandleInertiaRequests' => __DIR__ . '/../..' . '/app/Http/Middleware/HandleInertiaRequests.php',
+        'App\\Http\\Requests\\Admin\\HomepageSlideRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Admin/HomepageSlideRequest.php',
+        'App\\Http\\Requests\\Admin\\ProductRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Admin/ProductRequest.php',
+        'App\\Http\\Requests\\Admin\\ShopOwnerRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Admin/ShopOwnerRequest.php',
+        'App\\Http\\Requests\\Admin\\ShopRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Admin/ShopRequest.php',
+        'App\\Http\\Requests\\Admin\\TestimonialRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Admin/TestimonialRequest.php',
         'App\\Http\\Requests\\Auth\\LoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/LoginRequest.php',
+        'App\\Http\\Requests\\Owner\\AddCatalogProductRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Owner/AddCatalogProductRequest.php',
+        'App\\Http\\Requests\\Owner\\ListingRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Owner/ListingRequest.php',
+        'App\\Http\\Requests\\Owner\\NewProductRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Owner/NewProductRequest.php',
+        'App\\Http\\Requests\\Owner\\UpdateOrderStatusRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Owner/UpdateOrderStatusRequest.php',
         'App\\Http\\Requests\\Settings\\ProfileUpdateRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Settings/ProfileUpdateRequest.php',
+        'App\\Http\\Requests\\Storefront\\PlaceOrderRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Storefront/PlaceOrderRequest.php',
+        'App\\Models\\Contact' => __DIR__ . '/../..' . '/app/Models/Contact.php',
+        'App\\Models\\Email' => __DIR__ . '/../..' . '/app/Models/Email.php',
+        'App\\Models\\HomepageSlide' => __DIR__ . '/../..' . '/app/Models/HomepageSlide.php',
+        'App\\Models\\Order' => __DIR__ . '/../..' . '/app/Models/Order.php',
+        'App\\Models\\OrderItem' => __DIR__ . '/../..' . '/app/Models/OrderItem.php',
+        'App\\Models\\Product' => __DIR__ . '/../..' . '/app/Models/Product.php',
+        'App\\Models\\Shop' => __DIR__ . '/../..' . '/app/Models/Shop.php',
+        'App\\Models\\ShopProduct' => __DIR__ . '/../..' . '/app/Models/ShopProduct.php',
+        'App\\Models\\Testimonial' => __DIR__ . '/../..' . '/app/Models/Testimonial.php',
         'App\\Models\\User' => __DIR__ . '/../..' . '/app/Models/User.php',
+        'App\\Policies\\ShopPolicy' => __DIR__ . '/../..' . '/app/Policies/ShopPolicy.php',
+        'App\\Policies\\ShopProductPolicy' => __DIR__ . '/../..' . '/app/Policies/ShopProductPolicy.php',
         'App\\Providers\\AppServiceProvider' => __DIR__ . '/../..' . '/app/Providers/AppServiceProvider.php',
+        'App\\Support\\PublicImageUploader' => __DIR__ . '/../..' . '/app/Support/PublicImageUploader.php',
+        'App\\Support\\UniqueSlug' => __DIR__ . '/../..' . '/app/Support/UniqueSlug.php',
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
         'Brick\\Math\\BigInteger' => __DIR__ . '/..' . '/brick/math/src/BigInteger.php',
@@ -743,7 +782,10 @@ class ComposerStaticInit8560aeaaec172791428c9ef91c9bb34d
         'Cron\\MinutesField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MinutesField.php',
         'Cron\\MonthField' => __DIR__ . '/..' . '/dragonmantank/cron-expression/src/Cron/MonthField.php',
         'Database\\Factories\\UserFactory' => __DIR__ . '/../..' . '/database/factories/UserFactory.php',
+        'Database\\Seeders\\CommerceRoleSeeder' => __DIR__ . '/../..' . '/database/seeders/CommerceRoleSeeder.php',
         'Database\\Seeders\\DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeders/DatabaseSeeder.php',
+        'Database\\Seeders\\HomepageContentSeeder' => __DIR__ . '/../..' . '/database/seeders/HomepageContentSeeder.php',
+        'Database\\Seeders\\MarketplaceDemoSeeder' => __DIR__ . '/../..' . '/database/seeders/MarketplaceDemoSeeder.php',
         'Database\\Seeders\\PermissionSeeder' => __DIR__ . '/../..' . '/database/seeders/PermissionSeeder.php',
         'Database\\Seeders\\SuperAdminSeeder' => __DIR__ . '/../..' . '/database/seeders/SuperAdminSeeder.php',
         'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',

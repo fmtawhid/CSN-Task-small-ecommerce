@@ -1,1 +1,0 @@
-import{j as e}from"./app-CgSG-Yym.js";function t({className:o}){return e.jsx("img",{src:"/images/logo.png",alt:"Marketplace logo",className:`size-full rounded-lg object-contain ${o??""}`})}export{t as A};
