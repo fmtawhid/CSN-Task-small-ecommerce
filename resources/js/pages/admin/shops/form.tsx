@@ -9,6 +9,10 @@ type Owner = { id: number; name: string };
 export default function ShopForm({ shop, owners }: { shop?: Shop; owners: Owner[] }) {
     const form = useForm({
         owner_id: shop?.owner_id?.toString() ?? '',
+        owner_name: '',
+        owner_email: '',
+        owner_password: '',
+        owner_password_confirmation: '',
         name: shop?.name ?? '',
         slug: shop?.slug ?? '',
         description: shop?.description ?? '',
@@ -28,11 +32,20 @@ export default function ShopForm({ shop, owners }: { shop?: Shop; owners: Owner[
     return (
         <CommercePage title={shop ? 'Edit shop' : 'Create shop'}>
             <form onSubmit={submit} className="max-w-2xl space-y-4 rounded-lg border bg-card p-6">
-                <label className="grid gap-1.5 text-sm font-medium">Shop owner
-                    <select className="rounded-md border bg-background px-3 py-2" value={form.data.owner_id} onChange={(e) => form.setData('owner_id', e.target.value)}>
-                        <option value="">Select an owner</option>{owners.map((owner) => <option key={owner.id} value={owner.id}>{owner.name}</option>)}
-                    </select><FieldError message={form.errors.owner_id} />
-                </label>
+                {shop ? (
+                    <label className="grid gap-1.5 text-sm font-medium">Shop owner
+                        <select className="rounded-md border bg-background px-3 py-2" value={form.data.owner_id} onChange={(e) => form.setData('owner_id', e.target.value)}>
+                            <option value="">Select an owner</option>{owners.map((owner) => <option key={owner.id} value={owner.id}>{owner.name}</option>)}
+                        </select><FieldError message={form.errors.owner_id} />
+                    </label>
+                ) : (
+                    <>
+                        <Field label="Owner name" value={form.data.owner_name} required onChange={(value) => form.setData('owner_name', value)} error={form.errors.owner_name} />
+                        <Field label="Owner email" type="email" value={form.data.owner_email} required onChange={(value) => form.setData('owner_email', value)} error={form.errors.owner_email} />
+                        <Field label="Owner password" type="password" value={form.data.owner_password} required onChange={(value) => form.setData('owner_password', value)} error={form.errors.owner_password} />
+                        <Field label="Confirm owner password" type="password" value={form.data.owner_password_confirmation} required onChange={(value) => form.setData('owner_password_confirmation', value)} />
+                    </>
+                )}
                 <Field label="Shop name" value={form.data.name} required onChange={(value) => form.setData('name', value)} error={form.errors.name} />
                 <Field label="Slug (optional)" value={form.data.slug} onChange={(value) => form.setData('slug', value)} error={form.errors.slug} />
                 <label className="grid gap-1.5 text-sm font-medium">Description

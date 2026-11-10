@@ -2,7 +2,7 @@
 
 Laravel 12, Inertia.js 2, React, TypeScript, and Tailwind CSS application for managing shops and a shared product catalog.
 
-Public repository: [github.com/fmtawhid/CSN-Task-small-ecommerce-](https://github.com/fmtawhid/CSN-Task-small-ecommerce-)
+Public repository: [github.com/fmtawhid/CSN-Task-small-ecommerce](https://github.com/fmtawhid/CSN-Task-small-ecommerce)
 
 ## Features
 
@@ -14,7 +14,7 @@ Public repository: [github.com/fmtawhid/CSN-Task-small-ecommerce-](https://githu
 
 ## Requirements
 
-- PHP 8.2 or newer with the Laravel-required PHP extensions. Enable `pdo_mysql` for MySQL and `pdo_sqlite` for the test suite.
+- PHP 8.2 or newer with the Laravel-required PHP extensions. Enable `pdo_mysql` for the application; `pdo_sqlite` is only needed if you run the automated test suite.
 - Composer 2
 - Node.js 20 or newer and npm
 - Git
@@ -23,7 +23,7 @@ This project uses MySQL for local development. The test suite uses an isolated i
 
 ## Fresh setup (MySQL)
 
-The commands below are for Windows PowerShell (including Laragon). Run them from the repository root.
+The commands below are for Windows PowerShell (including Laragon). Run them from the repository root. This assumes Laragon MySQL is running and the project's `.env` already points to the `small_ecommerce` database; no database creation or `.env` setup steps are included.
 
 ### 1. Get the code and install dependencies
 
@@ -36,72 +36,20 @@ npm ci
 
 If you already have the project, open PowerShell in its root folder and continue below.
 
-### 2. Create a MySQL database
+### 2. Run migrations and seeders
 
-Start MySQL from Laragon, then create an empty database named `small_ecommerce` in phpMyAdmin. Alternatively, run this in the phpMyAdmin SQL tab:
-
-```sql
-CREATE DATABASE small_ecommerce
-    CHARACTER SET utf8mb4
-    COLLATE utf8mb4_unicode_ci;
-```
-
-### 3. Configure Laravel
-
-Create `.env` only if it does not already exist; do not overwrite an existing one:
+Create the schema and seed permissions, roles, and starter homepage banners:
 
 ```powershell
-if (-not (Test-Path .env)) { Copy-Item .env.example .env }
+php artisan migrate --seed
 ```
 
-In `.env`, confirm the MySQL values match your Laragon setup:
-
-```dotenv
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=small_ecommerce
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-Set a unique admin email and a strong password as well. These values are used by the administrator seeder:
-
-```dotenv
-ECOMMERCE_ADMIN_NAME="Store Administrator"
-ECOMMERCE_ADMIN_EMAIL=admin@example.com
-ECOMMERCE_ADMIN_PASSWORD=replace-with-a-unique-strong-password
-```
-
-Use your own email and password; do not commit `.env` or use development credentials in production. Then generate the application key and clear cached configuration:
+Add local demo accounts, shops, products, and listings:
 
 ```powershell
-php artisan key:generate
-php artisan config:clear
-```
-
-### 4. Run migrations and seeders
-
-Run the schema migrations first:
-
-```powershell
-php artisan migrate
-```
-
-Seed permissions, roles, and the starter homepage banners:
-
-```powershell
-php artisan db:seed
-```
-
-Create the initial administrator from the `ECOMMERCE_ADMIN_*` values in `.env`:
-
-```powershell
-php artisan db:seed --class=SuperAdminSeeder
+php artisan db:seed --class=MarketplaceDemoSeeder
 php artisan storage:link
 ```
-
-For a one-command migration plus standard seed run, use `php artisan migrate --seed` instead of running `migrate` and `db:seed` separately. The administrator seeder remains a separate command so the admin account is created only when you explicitly run it.
 
 If you want to check migration status before or after migrating:
 
@@ -109,55 +57,57 @@ If you want to check migration status before or after migrating:
 php artisan migrate:status
 ```
 
-### 5. Build assets and start the application
+### 3. Build assets and start the application
 
 For a production asset build:
 
 ```powershell
 npm run build
-php artisan serve
+npm run dev
 ```
 
-Open <http://127.0.0.1:8000>. For local development with the server, queue worker, and Vite dev server running together, use:
+Open [projectname.test](projectname.test). For local development with the server, queue worker, and Vite dev server running together, use:
 
 ```powershell
 composer run dev
 ```
 
-Sign in at `/login`; the admin dashboard is `/admin/dashboard`. From the admin panel, create shop-owner accounts at `/admin/owners` and then create shops at `/admin/shops`, assigning each shop to its owner.
+Sign in at `/login`; the admin dashboard is `/admin/dashboard`. Create shops at `/admin/shops` by entering the owner's name, email, and password; the owner account is created together with the shop. Use `/admin/owners` to manage existing owners.
 
-## Optional demo data
+## Demo login credentials
 
-After running the migrations and standard seeders, you can create a demo admin, five owner accounts, five shops, and sample catalog products/listings:
+The `MarketplaceDemoSeeder` creates the following accounts. Use these credentials for local testing only; never use them in production.
 
-```powershell
-php artisan db:seed --class=MarketplaceDemoSeeder
-```
+| Role | Email | Password |
+| --- | --- | --- |
+| Admin | `demo-admin@example.test` | `AdminDemo123!` |
+| User | `demo-user@example.test` | `UserDemo123!` |
+| Shop owner (first shop) | `demo-owner-1@example.test` | `OwnerDemo123!` |
 
-The seeder generates new passwords each time it runs and writes the local login details to `storage/app/private/demo-credentials.txt`. Use this only for local development; do not use demo accounts in production or publish that credentials file.
+The other four shop owners use `demo-owner-2@example.test` through `demo-owner-5@example.test` with the same owner password. When creating a shop in the admin panel, enter the owner's name, email, and password in the shop form; the owner account and shop are created together.
 
 ## Main routes
 
-| Route | Purpose |
-| --- | --- |
-| `/` | Customer marketplace home |
-| `/products` | Searchable catalog of products listed by active shops |
-| `/stores` | Searchable directory of active shops |
-| `/shop/{slug}` | Shop storefront |
-| `/login` | Admin and shop-owner sign in |
-| `/admin/dashboard` | Admin dashboard |
-| `/owner/dashboard` | Shop-owner dashboard |
+| Route                | Purpose                                               |
+| -------------------- | ----------------------------------------------------- |
+| `/`                | Customer marketplace home                             |
+| `/products`        | Searchable catalog of products listed by active shops |
+| `/stores`          | Searchable directory of active shops                  |
+| `/shop/{slug}`     | Shop storefront                                       |
+| `/login`           | Admin, user, and shop-owner sign in                    |
+| `/admin/dashboard` | Admin dashboard                                       |
+| `/owner/dashboard` | Shop-owner dashboard                                  |
 
 ## Tests and checks
 
-The feature tests use an in-memory SQLite database. Ensure the PHP CLI has `pdo_sqlite` enabled, then run:
+ separate from the MySQL database used by the application. Enable `` only if you want to run the test suite:
 
 ```powershell
-php artisan test
-npm run types
+
 npm run build
+
 ```
 
 ## Repository safety
 
-`.env` contains machine-specific configuration and secrets. Keep it out of commits; `.env.example` is the safe configuration template. Uploaded files, local SQLite databases, dependencies, and generated demo credentials should also remain local.
+`.env` contains machine-specific configuration and secrets. Keep it out of commits; `.env.example` is the safe configuration template. Uploaded files, local SQLite databases, and dependencies should also remain local.

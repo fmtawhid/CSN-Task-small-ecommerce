@@ -7,7 +7,10 @@ use App\Models\Shop;
 use App\Models\ShopProduct;
 use App\Models\Testimonial;
 use App\Models\User;
+use Database\Seeders\CommerceRoleSeeder;
+use Database\Seeders\MarketplaceDemoSeeder;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 
 function makeShop(User $owner, string $name = 'Example shop'): Shop
@@ -38,6 +41,66 @@ test('only admins may access admin endpoints', function () {
     $admin = User::factory()->create(['role' => 'admin']);
     $this->actingAs($admin)->get(route('admin.dashboard'))->assertOk();
     $this->actingAs($admin)->get(route('admin.homepage.index'))->assertOk();
+});
+
+test('admins can create a shop and its owner account together', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+
+    $this->actingAs($admin)->post(route('admin.shops.store'), [
+        'owner_name' => 'New Shop Owner',
+        'owner_email' => 'new-owner@example.com',
+        'owner_password' => 'owner-password',
+        'owner_password_confirmation' => 'owner-password',
+        'name' => 'New Demo Shop',
+        'slug' => '',
+        'description' => 'A newly created shop.',
+        'status' => 'active',
+    ])->assertRedirect(route('admin.shops.index'));
+
+    $owner = User::where('email', 'new-owner@example.com')->firstOrFail();
+    $shop = Shop::where('name', 'New Demo Shop')->firstOrFail();
+
+    expect($owner->role)->toBe('shop_owner')
+        ->and(Hash::check('owner-password', $owner->password))->toBeTrue()
+        ->and($shop->owner_id)->toBe($owner->id);
+});
+
+test('admins can update a shop without creating another owner account', function () {
+    $admin = User::factory()->create(['role' => 'admin']);
+    $owner = User::factory()->create(['role' => 'shop_owner']);
+    $shop = makeShop($owner, 'Existing shop');
+
+    $this->actingAs($admin)->put(route('admin.shops.update', $shop), [
+        'owner_id' => $owner->id,
+        'owner_name' => '',
+        'owner_email' => '',
+        'owner_password' => '',
+        'owner_password_confirmation' => '',
+        'name' => 'Updated shop',
+        'slug' => 'updated-shop',
+        'description' => '',
+        'status' => 'active',
+    ])->assertRedirect(route('admin.shops.index'));
+
+    expect($shop->fresh()->name)->toBe('Updated shop')
+        ->and(User::where('role', 'shop_owner')->count())->toBe(1);
+});
+
+test('demo seeder creates stable admin, user, and shop-owner login accounts', function () {
+    $this->seed(CommerceRoleSeeder::class);
+    $this->seed(MarketplaceDemoSeeder::class);
+
+    $admin = User::where('email', 'demo-admin@example.test')->firstOrFail();
+    $user = User::where('email', 'demo-user@example.test')->firstOrFail();
+    $owner = User::where('email', 'demo-owner-1@example.test')->firstOrFail();
+
+    expect($admin->role)->toBe('admin')
+        ->and(Hash::check('AdminDemo123!', $admin->password))->toBeTrue()
+        ->and($user->role)->toBe('user')
+        ->and(Hash::check('UserDemo123!', $user->password))->toBeTrue()
+        ->and($owner->role)->toBe('shop_owner')
+        ->and(Hash::check('OwnerDemo123!', $owner->password))->toBeTrue()
+        ->and($owner->shop()->exists())->toBeTrue();
 });
 
 test('homepage shows active admin-managed slides and reviews only', function () {

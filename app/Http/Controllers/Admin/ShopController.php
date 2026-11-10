@@ -10,6 +10,7 @@ use App\Support\PublicImageUploader;
 use App\Support\UniqueSlug;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -34,9 +35,26 @@ class ShopController extends Controller
         $data = $request->validated();
         $data['slug'] = $data['slug'] ?: UniqueSlug::make($data['name'], Shop::class);
         $data['logo'] = PublicImageUploader::store($request->file('logo'), 'shops', 'logo');
-        Shop::create($data);
 
-        return to_route('admin.shops.index')->with('success', 'Shop created.');
+        DB::transaction(function () use ($data): void {
+            $owner = User::create([
+                'name' => $data['owner_name'],
+                'email' => $data['owner_email'],
+                'password' => Hash::make($data['owner_password']),
+                'role' => 'shop_owner',
+            ]);
+
+            Shop::create([
+                'owner_id' => $owner->id,
+                'name' => $data['name'],
+                'slug' => $data['slug'],
+                'description' => $data['description'] ?? null,
+                'logo' => $data['logo'],
+                'status' => $data['status'],
+            ]);
+        });
+
+        return to_route('admin.shops.index')->with('success', 'Shop and owner account created.');
     }
 
     public function edit(Shop $shop): Response

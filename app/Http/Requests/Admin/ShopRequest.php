@@ -17,8 +17,13 @@ class ShopRequest extends FormRequest
         $shop = $this->route('shop');
 
         return [
-            'owner_id' => ['required', 'integer', Rule::exists('users', 'id')->where('role', 'shop_owner'),
-                Rule::unique('shops', 'owner_id')->ignore($shop?->id)],
+            'owner_id' => $shop
+                ? ['required', 'integer', Rule::exists('users', 'id')->where('role', 'shop_owner'),
+                    Rule::unique('shops', 'owner_id')->ignore($shop->id)]
+                : ['prohibited'],
+            'owner_name' => $shop ? ['prohibited'] : ['required', 'string', 'max:255'],
+            'owner_email' => $shop ? ['prohibited'] : ['required', 'email', 'max:255', 'unique:users,email'],
+            'owner_password' => $shop ? ['prohibited'] : ['required', 'string', 'min:8', 'confirmed'],
             'name' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', Rule::unique('shops', 'slug')->ignore($shop?->id)],
             'description' => ['nullable', 'string', 'max:5000'],

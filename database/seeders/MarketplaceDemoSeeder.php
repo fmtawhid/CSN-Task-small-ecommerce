@@ -8,12 +8,20 @@ use App\Models\ShopProduct;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use RuntimeException;
 
 class MarketplaceDemoSeeder extends Seeder
 {
+    private const ADMIN_EMAIL = 'demo-admin@example.test';
+
+    private const USER_EMAIL = 'demo-user@example.test';
+
+    private const OWNER_PASSWORD = 'OwnerDemo123!';
+
+    private const ADMIN_PASSWORD = 'AdminDemo123!';
+
+    private const USER_PASSWORD = 'UserDemo123!';
+
     private const STORES = [
         [
             'owner' => 'Ayesha Rahman',
@@ -79,35 +87,39 @@ class MarketplaceDemoSeeder extends Seeder
 
     public function run(): void
     {
-        $credentials = [];
-
-        DB::transaction(function () use (&$credentials) {
-            $adminPassword = Str::random(24);
+        DB::transaction(function () {
             $admin = User::updateOrCreate(
-                ['email' => 'marketplace-demo-admin@example.test'],
+                ['email' => self::ADMIN_EMAIL],
                 [
                     'name' => 'Marketplace Demo Admin',
-                    'password' => $adminPassword,
+                    'password' => self::ADMIN_PASSWORD,
                     'role' => 'admin',
                     'email_verified_at' => now(),
                 ]
             );
             $admin->syncRoles(['admin']);
-            $credentials[] = ['role' => 'Admin', 'user' => $admin, 'password' => $adminPassword];
+
+            User::updateOrCreate(
+                ['email' => self::USER_EMAIL],
+                [
+                    'name' => 'Marketplace Demo User',
+                    'password' => self::USER_PASSWORD,
+                    'role' => 'user',
+                    'email_verified_at' => now(),
+                ]
+            );
 
             foreach (self::STORES as $storeIndex => $storeData) {
-                $ownerPassword = Str::random(24);
                 $owner = User::updateOrCreate(
-                    ['email' => 'marketplace-demo-owner-'.($storeIndex + 1).'@example.test'],
+                    ['email' => 'demo-owner-'.($storeIndex + 1).'@example.test'],
                     [
                         'name' => $storeData['owner'],
-                        'password' => $ownerPassword,
+                        'password' => self::OWNER_PASSWORD,
                         'role' => 'shop_owner',
                         'email_verified_at' => now(),
                     ]
                 );
                 $owner->syncRoles(['shop_owner']);
-                $credentials[] = ['role' => 'Shop Owner', 'user' => $owner, 'password' => $ownerPassword];
 
                 $shop = Shop::updateOrCreate(
                     ['slug' => $storeData['slug']],
@@ -143,29 +155,7 @@ class MarketplaceDemoSeeder extends Seeder
             }
         });
 
-        $lines = [
-            'LOCAL DEMO MARKETPLACE LOGIN CREDENTIALS',
-            '=========================================',
-            'For local development only. Do not use these accounts in production.',
-            'Credentials are regenerated whenever MarketplaceDemoSeeder runs.',
-            '',
-        ];
-
-        foreach ($credentials as $credential) {
-            $user = $credential['user'];
-            $lines[] = $credential['role'];
-            $lines[] = 'Name: '.$user->name;
-            $lines[] = 'User ID: '.$user->id;
-            $lines[] = 'Email / login ID: '.$user->email;
-            $lines[] = 'Password: '.$credential['password'];
-            $lines[] = '';
-        }
-
-        if (! Storage::disk('local')->put('demo-credentials.txt', implode(PHP_EOL, $lines))) {
-            throw new RuntimeException('Demo accounts were created, but the local credentials file could not be written.');
-        }
-
-        $this->command?->info('Created 1 admin, 5 shop owners, 5 shops, 20 unique products, and 20 shop listings.');
-        $this->command?->info('Local credentials saved to storage/app/private/demo-credentials.txt (git-ignored).');
+        $this->command?->info('Created 1 admin, 1 user, 5 shop owners, 5 shops, 20 unique products, and 20 shop listings.');
+        $this->command?->info('Local demo credentials are listed in the README.');
     }
 }
