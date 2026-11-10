@@ -1,0 +1,93 @@
+MULTI-VENDOR E-COMMERCE FEATURE TRACKER
+========================================
+
+Architecture
+------------
+[x] Keep Laravel 12, Inertia.js 2, React/TypeScript, Tailwind, and existing auth.
+[x] Split application routes/controllers/pages into Admin, Owner, and Storefront areas.
+[x] Replace the portfolio home page with the customer marketplace homepage.
+
+Database and relationships
+--------------------------
+[x] Add users.role for admin/shop_owner authorization.
+[x] Add shops with owner, unique slug, description, logo, and active status.
+[x] Add global products with creator, unique slug, global description/image, and active status.
+[x] Add shop_products with shop-specific price, description, thumbnail, and listing status.
+[x] Enforce one shop per owner and unique shop/product listings.
+[x] Add foreign keys, indexes, casts, and Eloquent relationships.
+[x] Keep product records separate from shop listing customizations.
+
+Authentication and security
+---------------------------
+[x] Keep Laravel session login and password authentication.
+[x] Restrict admin endpoints to authenticated admin accounts.
+[x] Restrict owner endpoints to authenticated shop-owner accounts.
+[x] Scope owner listing edits/deletes to the authenticated owner's shop.
+[x] Add policies for shop and shop-listing ownership checks.
+[x] Validate catalog, shop, account, listing, and image inputs.
+[x] Restrict uploads to JPG/JPEG/PNG/WebP images up to 2 MB; store on public disk.
+[x] Prevent duplicate listings at both validation/business-logic and database levels.
+[x] Avoid exposing products from inactive shops, listings, or global products.
+
+Admin panel
+-----------
+[x] Dashboard counts for shops, owners, products, and listings.
+[x] Shop create/list/edit/delete and activate/deactivate.
+[x] Shop owner account create/list/edit/delete.
+[x] Global product create/list/edit/delete and activate/deactivate.
+[x] View/filter shop listings and activate/deactivate listings.
+
+Shop owner panel
+----------------
+[x] Owner dashboard with shop and listing statistics.
+[x] Browse, search, filter, and paginate active products in the shared catalog.
+[x] Add admin/owner catalog products to a shop with its own price.
+[x] Make products created by owners available to all owners through the shared catalog.
+[x] Keep price, description, and thumbnail customizations on the shop listing only.
+[x] Edit shop listing price, description, thumbnail, and published status.
+[x] Remove own shop listing without deleting the global product.
+[x] Validate uploaded image paths for shop, catalog, and owner-product uploads.
+[x] Preserve existing product images when no replacement is uploaded.
+[x] Redesign the owner dashboard with product statistics, recent products, and storefront shortcuts.
+
+Customer storefront
+-------------------
+[x] Shop-slug storefront only includes active products assigned to that shop.
+[x] Display shop-specific listing data with global description/image fallback.
+[x] Product details resolve only through the requested shop's active listing.
+[x] Add separate searchable, paginated all-products and all-shops pages.
+[x] Add an admin-managed, automatically rotating homepage banner carousel.
+[x] Document the recommended banner image size (1920 x 720 px) in the admin editor.
+[x] Seed two editable starter banners without generating fake customer reviews.
+[x] Add admin-managed customer reviews with rating, ordering, and publish controls.
+[x] Use the existing Marketplace logo throughout public and admin navigation.
+[x] Show a local placeholder image when a product image is missing.
+[x] Keep the homepage, storefront, product, and auth page backgrounds light.
+[x] Reuse one responsive Marketplace navigation across customer and auth pages.
+[x] Provide a browser-persisted cart with quantity controls and product detail add-to-cart.
+[x] Accept guest cash-on-delivery orders with validated delivery details.
+[x] Split mixed-shop carts into one owner-facing order per shop.
+[x] Re-check listing/shop/product availability and current prices server-side at checkout.
+[x] Keep order-item product names and prices as purchase-time snapshots.
+[x] Let shop owners view only their shop's orders and advance valid order statuses.
+
+Seed and local setup
+--------------------
+[x] Seed core Spatie role records without creating hard-coded demo credentials.
+[x] Add an idempotent demo seeder for 1 admin, 5 owners, 5 shops, and 20 unique products/listings.
+[x] Write generated demo login IDs and passwords to a git-ignored local credentials file.
+[x] Ran MarketplaceDemoSeeder: 1 admin, 5 owners, 5 shops, 20 unique products, 20 listings.
+[ ] Configure ECOMMERCE_ADMIN_EMAIL and ECOMMERCE_ADMIN_PASSWORD, then run
+    php artisan db:seed --class=SuperAdminSeeder to create the initial admin.
+[x] Applied php artisan migrate; linked the public storage disk.
+
+Verification
+------------
+[x] Run targeted checkout/order tests with available SQLite extensions enabled
+    for the test process (3 tests, 34 assertions passed).
+[ ] Full test suite: 39 passed; one existing owner-listing test expects 404 but
+    currently receives 403. The new checkout/order tests all pass.
+[x] Apply additive order and order-item migrations to the configured MySQL database.
+[ ] Resolve existing workspace-wide TypeScript diagnostics; the commerce page files
+    changed for this task have no TypeScript diagnostics.
+[x] Vite production build completed successfully.
