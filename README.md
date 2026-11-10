@@ -1,6 +1,3 @@
-```
-```
-
 # Marketplace - Multi-vendor E-commerce
 
 Laravel 12, Inertia.js 2, React, TypeScript, and Tailwind CSS application for managing shops and a shared product catalog.
@@ -33,17 +30,12 @@ The commands below are for Windows PowerShell (including Laragon). Run them from
 ```powershell
 git clone https://github.com/fmtawhid/CSN-Task-small-ecommerce.git
 cd CSN-Task-small-ecommerce
-composer install
 npm ci
 ```
 
-If you already have the project, open PowerShell in its root folder and continue below. For a fresh clone, create and configure the local environment:
+The repository includes `vendor` and `.env`, so `composer install` and copying `.env.example` are not needed for the initial setup. If you already have the project, open PowerShell in its root folder and continue below.
 
-```powershell
-Copy-Item .env.example .env
-```
-
-Set `APP_URL` to `http://csn-task-small-ecommerce.test` when using Laragon's virtual host, and update the `DB_*` values in `.env` if your MySQL credentials differ from the defaults. Then generate the application key:
+In `.env`, set `APP_URL` to `http://csn-task-small-ecommerce.test` when using Laragon's virtual host, and update the `DB_*` values if your MySQL credentials differ from the configured defaults. Generate an application key only if `APP_KEY` is empty:
 
 ```powershell
 php artisan key:generate
@@ -113,6 +105,6 @@ php artisan test
 npm run build
 ```
 
-## Repository safety
+## Repository configuration
 
-`.env` contains machine-specific configuration and secrets. Keep it out of commits; `.env.example` is the safe configuration template. Uploaded files, local SQLite databases, and dependencies should also remain local.
+This assessment repository currently includes `.env` and `vendor`. Make sure `.env` contains no real or reused secrets before publishing or deploying; use private environment configuration for production. Uploaded files, local SQLite databases, and `node_modules` should remain local.
