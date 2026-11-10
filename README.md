@@ -14,16 +14,16 @@ Public repository: [github.com/fmtawhid/CSN-Task-small-ecommerce-](https://githu
 
 ## Requirements
 
-- PHP 8.2 or newer with the Laravel-required PHP extensions. Enable `pdo_sqlite` for the default SQLite database and for the test suite.
+- PHP 8.2 or newer with the Laravel-required PHP extensions. Enable `pdo_mysql` for MySQL and `pdo_sqlite` for the test suite.
 - Composer 2
 - Node.js 20 or newer and npm
 - Git
 
-You can use MySQL instead of SQLite by configuring its connection in `.env` and creating the database before migrating.
+This project uses MySQL for local development. The test suite uses an isolated in-memory SQLite database.
 
-## Fresh setup
+## Fresh setup (MySQL)
 
-Run these commands from the repository root.
+The commands below are for Windows PowerShell (including Laragon). Run them from the repository root.
 
 ### 1. Get the code and install dependencies
 
@@ -34,21 +34,38 @@ composer install
 npm ci
 ```
 
-### 2. Configure Laravel and the database
+If you already have the project, open PowerShell in its root folder and continue below.
 
-Copy `.env.example` to `.env` if `.env` does not already exist. In PowerShell:
+### 2. Create a MySQL database
+
+Start MySQL from Laragon, then create an empty database named `small_ecommerce` in phpMyAdmin. Alternatively, run this in the phpMyAdmin SQL tab:
+
+```sql
+CREATE DATABASE small_ecommerce
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+```
+
+### 3. Configure Laravel
+
+Create `.env` only if it does not already exist; do not overwrite an existing one:
 
 ```powershell
 if (-not (Test-Path .env)) { Copy-Item .env.example .env }
-php artisan key:generate
-if (-not (Test-Path database\database.sqlite)) {
-    New-Item -ItemType File -Path database\database.sqlite | Out-Null
-}
 ```
 
-On macOS/Linux, use `cp .env.example .env` (if needed) and `touch database/database.sqlite` instead.
+In `.env`, confirm the MySQL values match your Laragon setup:
 
-The example environment uses SQLite. In `.env`, set the administrator details before creating the first admin:
+```dotenv
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=small_ecommerce
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Set a unique admin email and a strong password as well. These values are used by the administrator seeder:
 
 ```dotenv
 ECOMMERCE_ADMIN_NAME="Store Administrator"
@@ -56,19 +73,43 @@ ECOMMERCE_ADMIN_EMAIL=admin@example.com
 ECOMMERCE_ADMIN_PASSWORD=replace-with-a-unique-strong-password
 ```
 
-Use your own email and a strong password; these values are examples, not credentials. Never commit `.env` or use development credentials in production.
-
-### 3. Run migrations, seed reference data, and create the administrator
+Use your own email and password; do not commit `.env` or use development credentials in production. Then generate the application key and clear cached configuration:
 
 ```powershell
-php artisan migrate --seed
+php artisan key:generate
+php artisan config:clear
+```
+
+### 4. Run migrations and seeders
+
+Run the schema migrations first:
+
+```powershell
+php artisan migrate
+```
+
+Seed permissions, roles, and the starter homepage banners:
+
+```powershell
+php artisan db:seed
+```
+
+Create the initial administrator from the `ECOMMERCE_ADMIN_*` values in `.env`:
+
+```powershell
 php artisan db:seed --class=SuperAdminSeeder
 php artisan storage:link
 ```
 
-`migrate --seed` creates the database schema and seeds the permission/role records and starter homepage banners. Commerce migrations create the shop, product catalog, shop-product listing, homepage content, and order tables. The initial administrator is created separately from the `ECOMMERCE_ADMIN_*` values.
+For a one-command migration plus standard seed run, use `php artisan migrate --seed` instead of running `migrate` and `db:seed` separately. The administrator seeder remains a separate command so the admin account is created only when you explicitly run it.
 
-### 4. Build assets and start the application
+If you want to check migration status before or after migrating:
+
+```powershell
+php artisan migrate:status
+```
+
+### 5. Build assets and start the application
 
 For a production asset build:
 
@@ -87,7 +128,7 @@ Sign in at `/login`; the admin dashboard is `/admin/dashboard`. From the admin p
 
 ## Optional demo data
 
-After running `php artisan migrate --seed`, you can create a demo admin, five owner accounts, five shops, and sample catalog products/listings:
+After running the migrations and standard seeders, you can create a demo admin, five owner accounts, five shops, and sample catalog products/listings:
 
 ```powershell
 php artisan db:seed --class=MarketplaceDemoSeeder
